@@ -23,9 +23,9 @@ function gameStart() {
     // plansza[5][7] = 1
 
     //test snake
-    plansza[7][2] = 2
-    plansza[7][3] = 2
-    plansza[7][4] = 2
+    plansza[6][2] = 2
+    plansza[6][3] = 2
+    plansza[6][4] = 2
 
     // Legenda:
     // 0 -> puste pole
