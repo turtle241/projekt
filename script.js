@@ -49,8 +49,9 @@ function gameStart() {
         queue.push(s2)
         queue.push(s3)
 
-        snakeDirection = 'bottom'
+        snakeDirection = 'down'
         fillMap()
+
     }
 
     startingSnake()
@@ -63,13 +64,13 @@ function gameStart() {
 
         console.log(snakeDirection)
 
-        if (snakeDirection == 'top') {
+        if (snakeDirection == 'up') {
             newSnakeY -= 1
-            if (newSnakeY == 0) {
+            if (newSnakeY == -1) {
                 newSnakeY = 9
             }
         }
-        else if (snakeDirection == 'bottom') {
+        else if (snakeDirection == 'down') {
             newSnakeY += 1
             if (newSnakeY == 10) {
                 newSnakeY = 0
@@ -77,7 +78,7 @@ function gameStart() {
         }
         else if (snakeDirection == 'left') {
             newSnakeX -= 1
-            if (newSnakeX == 0) {
+            if (newSnakeX == -1) {
                 newSnakeX = 9
             }
         }
@@ -149,6 +150,44 @@ function gameStart() {
     }
     fillMap()
 
+    let upKey = document.getElementById("up")
+    upKey.addEventListener("click", up)
 
+    let leftKey = document.getElementById("left")
+    leftKey.addEventListener("click", left)
+
+    let rightKey = document.getElementById("right")
+    rightKey.addEventListener("click", right)
+
+    let downKey = document.getElementById("down")
+    downKey.addEventListener("click", down)
+
+    function up() {
+        if (snakeDirection != 'up') {
+            snakeDirection = 'up'
+        }
+        moveSnake()
+    }
+
+    function left() {
+        if (snakeDirection != 'left') {
+            snakeDirection = 'left'
+        }
+        moveSnake()
+    }
+
+    function right() {
+        if (snakeDirection != 'right') {
+            snakeDirection = 'right'
+        }
+        moveSnake()
+    }
+
+    function down() {
+        if (snakeDirection != 'down') {
+            snakeDirection = 'down'
+        }
+        moveSnake()
+    }
 
 }

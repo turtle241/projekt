@@ -44,7 +44,19 @@ button {
     border: none;
 }
 
-button:hover{
+button:hover {
     background-color: #dbdbdb;
     cursor: pointer;
+}
+
+.keys {
+    text-align: center;
+}
+
+.arrow {
+    font-size: 1.2em;
+    margin: 2px;
+    padding: 10px;
+    width: 40px;
+    margin-top: 6px;
 }
