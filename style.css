@@ -60,3 +60,11 @@ button:hover {
     width: 40px;
     margin-top: 6px;
 }
+
+.lb {
+    position: absolute;
+    top: 30px;
+    right: 60px;
+    text-decoration: none;
+    color: #2b2b2b;
+}

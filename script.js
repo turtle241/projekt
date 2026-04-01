@@ -13,19 +13,19 @@ function gameStart() {
     const ctx = canvas.getContext("2d");
     const tileSize = 10
 
-    var appleCount = 3
-    var currentAppleCount = 0
+    let score = 0
 
     let plansza = []
     let queue = []
 
-    var snakeDirection = ''
+    let snakeDirection = ''
+
 
 
     for (let i = 0; i < 10; i++) {
         plansza[i] = [];
         for (let j = 0; j < 10; j++) {
-            plansza[i][j] = 0; //wypelnianie planszy pustymie miejscami
+            plansza[i][j] = 0; //wypelnianie planszy pustymi miejscami
         }
     }
 
@@ -50,6 +50,11 @@ function gameStart() {
         queue.push(s3)
 
         snakeDirection = 'down'
+
+        addRandomApple()
+        addRandomApple()
+        addRandomApple()
+
         fillMap()
 
     }
@@ -64,38 +69,76 @@ function gameStart() {
 
         console.log(snakeDirection)
 
+        // wersja z przenikaniem przez sciany
+        // if (snakeDirection == 'up') {
+        //     newSnakeY -= 1
+        //     if (newSnakeY == -1) {
+        //         newSnakeY = 9
+        //     }
+        // }
+        // else if (snakeDirection == 'down') {
+        //     newSnakeY += 1
+        //     if (newSnakeY == 10) {
+        //         newSnakeY = 0
+        //     }
+        // }
+        // else if (snakeDirection == 'left') {
+        //     newSnakeX -= 1
+        //     if (newSnakeX == -1) {
+        //         newSnakeX = 9
+        //     }
+        // }
+        // else if (snakeDirection == 'right') {
+        //     newSnakeX += 1
+        //     if (newSnakeX == 10) {
+        //         newSnakeX = 0
+        //     }
+        // }
+
+
+        // wersja z przegrywaniem po walnięciu w sciane
         if (snakeDirection == 'up') {
             newSnakeY -= 1
             if (newSnakeY == -1) {
-                newSnakeY = 9
+                snakeHitWall()
             }
         }
         else if (snakeDirection == 'down') {
             newSnakeY += 1
             if (newSnakeY == 10) {
-                newSnakeY = 0
+                snakeHitWall()
             }
         }
         else if (snakeDirection == 'left') {
             newSnakeX -= 1
             if (newSnakeX == -1) {
-                newSnakeX = 9
+                snakeHitWall()
             }
         }
         else if (snakeDirection == 'right') {
             newSnakeX += 1
             if (newSnakeX == 10) {
-                newSnakeX = 0
+                snakeHitWall()
             }
         }
 
-        plansza[newSnakeX][newSnakeY] = 2
-        let s = new Snake(newSnakeX, newSnakeY)
-        queue.push(s)
+        //jesli jablko na nowej pozycji glowy węża
+        if (plansza[newSnakeX][newSnakeY] == 1) {
+            plansza[newSnakeX][newSnakeY] = 2
+            let s = new Snake(newSnakeX, newSnakeY)
+            queue.push(s)
 
-        let ogon = queue.shift()
-        plansza[ogon.x][ogon.y] = 0
+            score += 1
+            addRandomApple()
+        }
+        else {
+            plansza[newSnakeX][newSnakeY] = 2
+            let s = new Snake(newSnakeX, newSnakeY)
+            queue.push(s)
 
+            let ogon = queue.shift()
+            plansza[ogon.x][ogon.y] = 0
+        }
         fillMap()
     }
 
@@ -113,19 +156,15 @@ function gameStart() {
     // 2 -> snake
 
     //dodawanie jablek
-    while (currentAppleCount < appleCount) {
-        restoreApples()
-    }
-
-    function restoreApples() {
+    function addRandomApple() {
         let x = Math.floor((Math.random() * 10) + 1);
         let y = Math.floor((Math.random() * 10) + 1);
-        if (plansza[x][y] != 2) {
+
+        if (plansza[x][y] != 1 && plansza[x][y] != 2) {
             plansza[x][y] = 1
-            currentAppleCount += 1
         }
         else {
-            currentAppleCount += 0
+            addRandomApple()
         }
     }
 
@@ -163,31 +202,39 @@ function gameStart() {
     downKey.addEventListener("click", down)
 
     function up() {
-        if (snakeDirection != 'up') {
+        if (snakeDirection != 'up' && snakeDirection != 'down') {
             snakeDirection = 'up'
+            moveSnake()
         }
-        moveSnake()
     }
 
     function left() {
-        if (snakeDirection != 'left') {
+        if (snakeDirection != 'left' && snakeDirection != 'right') {
             snakeDirection = 'left'
+            moveSnake()
         }
-        moveSnake()
     }
 
     function right() {
-        if (snakeDirection != 'right') {
+        if (snakeDirection != 'right' && snakeDirection != 'left') {
             snakeDirection = 'right'
+            moveSnake()
         }
-        moveSnake()
     }
 
     function down() {
-        if (snakeDirection != 'down') {
+        if (snakeDirection != 'down' && snakeDirection != 'up') {
             snakeDirection = 'down'
+            moveSnake()
         }
-        moveSnake()
     }
 
+    function snakeHitWall() {
+        alert(`Przegrałeś! Twój wynik to: ${score}`)
+        reloadPage()
+    }
+
+    function reloadPage(){
+        window.location.reload();
+    }
 }
