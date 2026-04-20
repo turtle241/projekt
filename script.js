@@ -1,9 +1,49 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let highscore = Number(localStorage.getItem("highscore"))
+let topOne = Number(localStorage.getItem("one")) || 0
+let topTwo = Number(localStorage.getItem("two")) || 0
+let topThree = Number(localStorage.getItem("three")) || 0
+let topFour = Number(localStorage.getItem("four")) || 0
+let topFive = Number(localStorage.getItem("five")) || 0
 
-    let highScoreLabel = document.getElementById("highscore")
-    highScoreLabel.innerHTML = `Highscore: ${highscore}`
+let oneLabel = document.getElementById("one")
+let twoLabel = document.getElementById("two")
+let threeLabel = document.getElementById("three")
+let fourLabel = document.getElementById("four")
+let fiveLabel = document.getElementById("five")
+
+function reloadHighscores() {
+    oneLabel.innerHTML = `${topOne}`
+    twoLabel.innerHTML = `${topTwo}`
+    threeLabel.innerHTML = `${topThree}`
+    fourLabel.innerHTML = `${topFour}`
+    fiveLabel.innerHTML = `${topFive}`
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // let highscore = Number(localStorage.getItem("highscore"))
+
+    // let highScoreLabel = document.getElementById("highscore")
+    // highScoreLabel.innerHTML = `Highscore: ${highscore}`
+
+    reloadHighscores()
+
+    localStorage.setItem("name", "Anonime")
 });
+
+document.getElementById("changeName").addEventListener("click", changeName);
+
+function changeName() {
+    let person = prompt("Please enter your name:", "");
+    if (person == null || person == "") {
+        return
+    } else {
+        playerNick = person
+        localStorage.setItem("name", playerNick)
+
+        let currentPlayerName = document.getElementById("currPlayer")
+        currentPlayerName.innerHTML = `Playing as: ${playerNick}`
+    }
+}
+
 
 document.getElementById("start").addEventListener("click", gameStart);
 
@@ -21,7 +61,6 @@ function gameStart() {
     const tileSize = 10
 
     let score = 0
-    let scores = []
 
     let plansza = []
     let queue = []
@@ -30,9 +69,6 @@ function gameStart() {
     let snakeDirection = ''
     var direction = 0
     let changedDirections = false
-
-    localStorage.getItem("highscore");
-    let highscore = Number(localStorage.getItem("highscore"))
 
     for (let i = 0; i < 10; i++) {
         plansza[i] = [];
@@ -146,23 +182,28 @@ function gameStart() {
         }
 
         if (changedDirections) {
-            let x = queue[queue.length - 1].x
-            let y = queue[queue.length - 1].y
-            if ((previousDir == "left" && snakeDirection == "up") || (previousDir == "up" && snakeDirection == "left")) {
-                queue[queue.length - 1].direction = 4
-                plansza[x][y] = 4
+            let x = queue[queue.length - 1].x;
+            let y = queue[queue.length - 1].y;
+
+            // 4 -> lewo-góra 
+            if ((previousDir == "right" && snakeDirection == "up") || (previousDir == "down" && snakeDirection == "left")) {
+                queue[queue.length - 1].direction = 4;
+                plansza[x][y] = 4;
             }
-            if ((previousDir == "right" && snakeDirection == "up") || (previousDir == "up" && snakeDirection == "right")) {
-                queue[queue.length - 1].direction = 5
-                plansza[x][y] = 5
+            // 5 -> prawo-góra 
+            else if ((previousDir == "left" && snakeDirection == "up") || (previousDir == "down" && snakeDirection == "right")) {
+                queue[queue.length - 1].direction = 5;
+                plansza[x][y] = 5;
             }
-            if ((previousDir == "left" && snakeDirection == "down") || (previousDir == "down" && snakeDirection == "left")) {
-                queue[queue.length - 1].direction = 6
-                plansza[x][y] = 6
+            // 6 -> lewo-dół 
+            else if ((previousDir == "right" && snakeDirection == "down") || (previousDir == "up" && snakeDirection == "left")) {
+                queue[queue.length - 1].direction = 6;
+                plansza[x][y] = 6;
             }
-            if ((previousDir == "right" && snakeDirection == "down") || (previousDir == "down" && snakeDirection == "right")) {
-                queue[queue.length - 2].direction = 7
-                plansza[x][y] = 7
+            // 7 -> prawo-dół 
+            else if ((previousDir == "left" && snakeDirection == "down") || (previousDir == "up" && snakeDirection == "right")) {
+                queue[queue.length - 1].direction = 7;
+                plansza[x][y] = 7;
             }
         }
 
@@ -197,13 +238,8 @@ function gameStart() {
 
     }
 
-    window.setInterval(moveSnake, 400)
-
-
-    //test apple
-    // plansza[3][4] = 1
-    // plansza[0][0] = 1
-    // plansza[6][2] = 1
+    let gameInterval = window.setInterval(moveSnake, 400)
+    let isGameOver = false
 
     // Legenda:
     // 0 -> puste pole
@@ -211,6 +247,7 @@ function gameStart() {
 
     //2 -> snake horizontal
     //3 -> snake vetrical
+
     //4 -> snake (left - up)
     //5 -> snake (right - up)
     //6 -> snake (left - down)
@@ -230,28 +267,46 @@ function gameStart() {
     }
 
     function drawTile(x, i, j) {
+        let half = tileSize / 2;
+
         switch (x) {
-            case 2:
+            case 2: // wąż poziomo
                 ctx.fillRect(i * tileSize, j * tileSize + 1, tileSize, tileSize - 2);
-                break
-            case 3:
+                break;
+            case 3: // wąż pionowo
                 ctx.fillRect(i * tileSize + 1, j * tileSize, tileSize - 2, tileSize);
-                break
-            case 4:
-                ctx.fillRect(i * tileSize + 1, j * tileSize + 1, tileSize - 2, tileSize - 2);
-                break
-            case 5:
-                ctx.fillRect(i * tileSize + 1, j * tileSize + 1, tileSize - 2, tileSize - 2);
-                break
-            case 6:
-                ctx.fillRect(i * tileSize + 1, j * tileSize + 1, tileSize - 2, tileSize - 2);
-                break
-            case 7:
-                ctx.fillRect(i * tileSize + 1, j * tileSize + 1, tileSize - 2, tileSize - 2);
-                break
-
-
+                break;
+            case 4: // lewo - góra
+                ctx.fillRect(i * tileSize, j * tileSize + 1, half + 1, tileSize - 2); // ramię w lewo
+                ctx.fillRect(i * tileSize + 1, j * tileSize, tileSize - 2, half + 1); // ramię w górę
+                break;
+            case 5: // prawo - góra
+                ctx.fillRect(i * tileSize + half - 1, j * tileSize + 1, half + 1, tileSize - 2); // ramię w prawo
+                ctx.fillRect(i * tileSize + 1, j * tileSize, tileSize - 2, half + 1); // ramię w górę
+                break;
+            case 6: // lewo - dół
+                ctx.fillRect(i * tileSize, j * tileSize + 1, half + 1, tileSize - 2); // ramię w lewo
+                ctx.fillRect(i * tileSize + 1, j * tileSize + half - 1, tileSize - 2, half + 1); // ramię w dół
+                break;
+            case 7: // prawo - dół
+                ctx.fillRect(i * tileSize + half - 1, j * tileSize + 1, half + 1, tileSize - 2); // ramię w prawo
+                ctx.fillRect(i * tileSize + 1, j * tileSize + half - 1, tileSize - 2, half + 1); // ramię w dół
+                break;
         }
+    }
+
+    function drawApple(i, j) {
+        const x = i * tileSize;
+        const y = j * tileSize;
+        const center = tileSize / 2;
+
+        ctx.fillStyle = "#5d3a1a";
+        ctx.fillRect(x + center - 1, y + 1, 2, 3);
+
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc(x + center, y + center + 1, tileSize / 2 - 1, 0, Math.PI * 2);
+        ctx.fill();
     }
 
     function fillMap() {
@@ -263,8 +318,10 @@ function gameStart() {
                     ctx.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                 }
                 else if (plansza[i][j] == 1) {
-                    ctx.fillStyle = "red";
+                    ctx.fillStyle = "white";
                     ctx.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+
+                    drawApple(i, j)
                 }
                 else {
                     ctx.fillStyle = "white";
@@ -339,14 +396,19 @@ function gameStart() {
     }
 
     function gameOver() {
-        if (score > highscore) {
-            localStorage.setItem("highscore", score)
-            updateHighScore(score)
-        }
+        if (isGameOver) return
+        isGameOver = true
 
-        scores.push(score)
+        // if (score > highscore) {
+        //     localStorage.setItem("highscore", score)
+        //     updateHighScore(score)
+        // }
 
-        alert(`Game over! Score: ${score}`)
+        clearInterval(gameInterval)
+
+        updateHighScores()
+
+        alert(`Game over "${localStorage.getItem("name")}"! Your score: ${score}`)
         reloadPage()
     }
 
@@ -380,14 +442,45 @@ function gameStart() {
         wynikLabel.innerHTML = `Score: ${score}`
     }
 
-    function updateHighScore(newHighscore) {
-        let highScoreLabel = document.getElementById("highscore")
-        highScoreLabel.innerHTML = `Highscore: ${newHighscore}`
+    function updateHighScoresInLocalStorage() {
+        localStorage.setItem("one", topOne)
+        localStorage.setItem("two", topTwo)
+        localStorage.setItem("three", topThree)
+        localStorage.setItem("four", topFour)
+        localStorage.setItem("five", topFive)
     }
 
-    updateHighScore(highscore)
-
-    document.addEventListener("DOMContentLoaded", function () {
-        updateHighScore(highscore)
-    });
+    function updateHighScores() {
+        // let highScoreLabel = document.getElementById("highscore")
+        // highScoreLabel.innerHTML = `Highscore: ${newHighscore}`
+        if (score > topOne) {
+            topFive = topFour
+            topFour = topThree
+            topThree = topTwo
+            topTwo = topOne
+            topOne = score
+        } else if (score > topTwo) {
+            topFive = topFour
+            topFour = topThree
+            topThree = topTwo
+            topTwo = score
+        } else if (score > topThree) {
+            topFive = topFour
+            topFour = topThree
+            topThree = score
+        } else if (score > topFour) {
+            topFive = topFour
+            topFour = score
+        } else if (score > topFive) {
+            topFive = score
+        }
+        reloadHighscores()
+        updateHighScoresInLocalStorage()
+    }
+    // document.addEventListener("DOMContentLoaded", function () {
+    //       updateHighScore(highscore)
+    // });
 }
+
+
+// localStorage.setItem("scores", "")

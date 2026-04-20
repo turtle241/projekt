@@ -7,6 +7,10 @@
     <title>Snake</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -14,8 +18,19 @@
         <h1>Snake game</h1>
         <button id="start">Start</button>
         <p id="score">Score: 0</p>
-        <p id="highscore">Highscore: 0</p>
-        <a class="lb" href="leaderboard.html">Leaderboard</a>
+        <!-- <p id="highscore">Highscore: 0</p> -->
+        <div class="lb">
+            <h3>Leaderboard</h3>
+            <ol>
+                <li id="one">?</li>
+                <li id="two">?</li>
+                <li id="three">?</li>
+                <li id="four">?</li>
+                <li id="five">?</li>
+            </ol>
+        </div>
+        <p id="currPlayer">Playing as: Anonime</p>
+        <button id="changeName">Change</button>
     </header>
 
     <main>
@@ -24,7 +39,6 @@
 
     <!-- <footer>Footer</footer> -->
 
-    <script src="script.js"></script>
     <br>
     <div class="keys">
         <button class="arrow" id="up"> ↑ </button><br>
@@ -34,6 +48,7 @@
         <button class="arrow" id="down"> ↓ </button>
         <p>You can also use arrows on keyboard</p>
     </div>
+    <script src="script.js" defer></script>
 </body>
 
 </html>
